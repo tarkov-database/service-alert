@@ -29,6 +29,7 @@ module.exports = async (req, res) => {
   if (!token) {
     res.statusCode = 401;
     res.end('Token missing');
+    return;
   }
 
   let service = '';
@@ -38,6 +39,7 @@ module.exports = async (req, res) => {
   } catch(err) {
     res.statusCode = 401;
     res.end(`Invalid token: ${err}`);
+    return;
   }
 
   // Read input
@@ -60,8 +62,8 @@ module.exports = async (req, res) => {
     break;
   default:
     res.statusCode = 400;
-    res.end();
-    return Promise.reject(new Error('Unknown service'));
+    res.end('Unknown service');
+    return;
   }
 
   // Send
@@ -71,8 +73,8 @@ module.exports = async (req, res) => {
     res.end();
   } catch (err) {
     res.statusCode = 500;
-    res.end();
-    return Promise.reject(err);
+    res.end(err);
+    return;
   }
 
 };
