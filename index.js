@@ -25,14 +25,19 @@ module.exports = async (req, res) => {
     return;
   }
 
+  const token = req.query.token;
+  if (!token) {
+    res.statusCode = 401;
+    res.end('Token missing');
+  }
+
   let service = '';
   try {
-    const decoded = jwt.verify(req.query.token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     service = decoded.subject;
   } catch(err) {
     res.statusCode = 401;
-    res.end();
-    return Promise.reject(err);
+    res.end(`Invalid token: ${err}`);
   }
 
   // Read input
