@@ -80,12 +80,14 @@ module.exports = async (req, res) => {
 };
 
 exports.apexEvent = data => {
+  const diffInMinutes = (a, b) => Math.round(((b-a)/1000)/60);
   return {
     id: data.alert.id,
     name: data.check.name,
     state: data.state === 'triggered' ? 'down' : 'up',
-    duration: data.alert.window_duration,
-    date: data.triggered_at
+    duration: data.state === 'resolved' ?
+      diffInMinutes(Date.parse(data.triggered_at), Date.parse(data.resolved_at)) : data.alert.window_duration,
+    date: data.resolved_at ? data.resolved_at : data.triggered_at
   };
 };
 
@@ -94,9 +96,9 @@ exports.discordHook = async evt => {
 
   let desc = '';
   if (evt.state === 'down') {
-    desc = `The service is unreachable for longer than ${evt.duration} minutes!`;
+    desc = `The service is unreachable for longer than ${evt.duration} minute(s)!`;
   } else {
-    desc = `The service has returned to online state!`;
+    desc = `The service returned to online state after ${evt.duration} minute(s)!`;
   }
 
   const msg = {
