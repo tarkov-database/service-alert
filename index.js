@@ -92,24 +92,17 @@ exports.apexEvent = data => {
 };
 
 exports.discordHook = async evt => {
-  const imgURL = process.env.IMAGE_URL;
-
   let desc = '';
   if (evt.state === 'down') {
-    desc = `The service is unreachable for longer than ${evt.duration} minute(s)!`;
+    desc = `The service is unreachable for longer than ${evt.duration} minute(s)`;
   } else {
-    desc = `The service returned to online state after ${evt.duration} minute(s)!`;
+    desc = `The service returned to online state after ${evt.duration} minute(s)`;
   }
 
   const msg = {
     embeds: [{
       title: evt.name,
       description: desc,
-      thumbnail: {
-        url: `${imgURL}/service-${evt.state}.png`,
-        height: 500,
-        width: 500
-      },
       timestamp: evt.date,
       url: process.env.STATUS_URL
     }],
