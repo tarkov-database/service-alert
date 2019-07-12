@@ -81,12 +81,13 @@ module.exports = async (req, res) => {
 
 exports.apexEvent = data => {
   const diffInMinutes = (a, b) => Math.round(((b-a)/1000)/60);
+  const duration = data.alert.window_duration;
   return {
     id: data.alert.id,
     name: data.check.name,
     state: data.state === 'triggered' ? 'down' : 'up',
     duration: data.state === 'resolved' ?
-      diffInMinutes(Date.parse(data.triggered_at), Date.parse(data.resolved_at)) : data.alert.window_duration,
+      diffInMinutes(Date.parse(data.triggered_at), Date.parse(data.resolved_at)) + duration : duration,
     date: data.resolved_at ? data.resolved_at : data.triggered_at
   };
 };
