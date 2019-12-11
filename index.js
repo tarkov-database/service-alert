@@ -111,10 +111,7 @@ exports.discordHook = async evt => {
   };
 
   try {
-    await got.post(process.env.DISCORD_URL, {
-      body: msg,
-      json: true
-    });
+    await got.post(process.env.DISCORD_URL, {json: msg}).json();
   } catch (err) {
     return Promise.reject(err);
   }
