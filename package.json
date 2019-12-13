@@ -4,7 +4,7 @@
   "description": "A simple service alert forwarder",
   "main": "index.js",
   "dependencies": {
-    "got": "^10.0.3",
+    "got": "^10.0.4",
     "jsonwebtoken": "^8.5.1"
   },
   "devDependencies": {
