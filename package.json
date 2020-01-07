@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "A simple service alert forwarder",
   "main": "index.js",
+  "engines": {
+    "node": ">=12.14"
+  },
   "dependencies": {
     "got": "^10.2.1",
     "jsonwebtoken": "^8.5.1"
@@ -19,8 +22,8 @@
   },
   "author": {
     "name": "Markus Wiegand",
-    "email": "mail@morphy2k.io",
-    "url": "https://morphy2k.io"
+    "email": "mail@morphy2k.dev",
+    "url": "https://morphy2k.dev"
   },
   "license": "MIT",
   "bugs": {
