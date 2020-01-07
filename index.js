@@ -35,7 +35,7 @@ module.exports = async (req, res) => {
   let service = '';
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    service = decoded.subject;
+    service = decoded.sub;
   } catch(err) {
     res.statusCode = 401;
     res.end(`Invalid token: ${err}`);
@@ -72,11 +72,11 @@ module.exports = async (req, res) => {
   // Send
   try {
     await exports.discordHook(event);
-    res.statusCode = 200;
+    res.statusCode = 202;
     res.end();
   } catch (err) {
     res.statusCode = 500;
-    res.end(err);
+    res.end(err.error);
     return;
   }
 
@@ -121,7 +121,7 @@ exports.discordHook = async evt => {
     embeds: [{
       title: evt.name,
       description: desc,
-      timestamp: evt.date,
+      timestamp: new Date(evt.date).toISOString(),
       url: process.env.STATUS_URL
     }],
     tts: false
