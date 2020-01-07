@@ -60,6 +60,9 @@ module.exports = async (req, res) => {
   case 'apex':
     event = exports.apexEvent(data);
     break;
+  case 'stackdriver':
+    event = exports.stackdriverEvent(data);
+    break;
   default:
     res.statusCode = 400;
     res.end('Unknown service');
@@ -89,6 +92,20 @@ exports.apexEvent = data => {
     duration: data.state === 'resolved' ?
       diffInMinutes(Date.parse(data.triggered_at), Date.parse(data.resolved_at)) + duration : duration,
     date: data.resolved_at ? data.resolved_at : data.triggered_at
+  };
+};
+
+exports.stackdriverEvent = data => {
+  const diffInMinutes = (a, b) => Math.round(((b-a)/1000)/60);
+  const incident = data.incident;
+  const duration = diffInMinutes(incident.started_at, Date.now());
+  return {
+    id: incident.incident_id,
+    name: incident.policy_name,
+    state: incident.state === 'open' ? 'down' : 'up',
+    duration: incident.state === 'closed' ?
+      diffInMinutes(incident.started_at, incident.ended_at) + duration : duration,
+    date: incident.ended_at ? incident.ended_at : incident.started_at
   };
 };
 
