@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 
 module.exports = async (req, res) => {
 
+  console.log(req);
+
   // Check method and set CORS
   switch (req.method) {
   case 'POST':
@@ -54,6 +56,8 @@ module.exports = async (req, res) => {
       resolve(JSON.parse(body));
     });
   });
+
+  console.log(body);
 
   let event = {};
   switch (service) {
