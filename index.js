@@ -3,6 +3,7 @@
 
 const got = require('got');
 const jwt = require('jsonwebtoken');
+const { DateTime } = require('luxon');
 
 module.exports = async (req, res) => {
 
@@ -96,32 +97,36 @@ exports.apexEvent = data => {
 };
 
 exports.stackdriverEvent = data => {
-  const diffInMinutes = (a, b) => Math.round(((b-a)/1000)/60);
   const incident = data.incident;
-  const duration = diffInMinutes(incident.started_at, Date.now());
+  const start = DateTime.fromSeconds(incident.started_at);
+  const end = incident.ended_at ? DateTime.fromSeconds(incident.ended_at) : null;
+  const duration = DateTime.utc().diff(start);
+
   return {
     id: incident.incident_id,
     name: incident.policy_name,
     state: incident.state === 'open' ? 'down' : 'up',
     duration: incident.state === 'closed' ?
-      diffInMinutes(incident.started_at, incident.ended_at) + duration : duration,
-    date: incident.ended_at ? incident.ended_at : incident.started_at
+      end.diff(start) : duration,
+    date: end ? end : start
   };
 };
 
 exports.discordHook = async evt => {
+  const duration = Math.round(evt.duration.as('minutes'));
+
   let desc = '';
   if (evt.state === 'down') {
-    desc = `The service is unreachable for longer than ${evt.duration} minute(s)`;
+    desc = `The service is unreachable for longer than ${duration} minute(s)`;
   } else {
-    desc = `The service returned to online state after ${evt.duration} minute(s)`;
+    desc = `The service returned to online state after ${duration} minute(s)`;
   }
 
   const msg = {
     embeds: [{
       title: evt.name,
       description: desc,
-      timestamp: new Date(evt.date).toISOString(),
+      timestamp: evt.date.toISO(),
       url: process.env.STATUS_URL
     }],
     tts: false
