@@ -6,6 +6,5 @@
     "STATUS_URL": "https://status.tarkov-database.com/",
     "DISCORD_URL": "@discord-url",
     "CORS_ALLOW_ORIGIN": "*"
-  },
-  "regions": ["sfo", "bru"]
+  }
 }
