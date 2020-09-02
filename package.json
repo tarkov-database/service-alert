@@ -9,7 +9,7 @@
   "dependencies": {
     "got": "^11.5.2",
     "jsonwebtoken": "^8.5.1",
-    "luxon": "^1.24.1"
+    "luxon": "^1.25.0"
   },
   "devDependencies": {
     "eslint": "^7.8.1"
